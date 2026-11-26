@@ -114,6 +114,16 @@ const RevokeKey = async (id: number) => {
   return toPublic(key);
 };
 
+/** Permanently removes a key (any status). Its request logs are detached first so the cascade keeps them. */
+const DeleteKey = async (id: number) => {
+  await getOrThrow(id);
+  await prisma.$transaction([
+    prisma.apiRequestLog.updateMany({ where: { apiKeyId: id }, data: { apiKeyId: null } }),
+    prisma.apiKey.delete({ where: { id } }),
+  ]);
+  return { id };
+};
+
 const ListLogs = async (q: LogsQuery) => {
   const where: Prisma.ApiRequestLogWhereInput = {
     apiKeyId: q.apiKeyId,
@@ -176,4 +186,4 @@ const GetOverview = async () => {
   };
 };
 
-export const ApiKeyService = { GetMeta, ListKeys, CreateKey, RevealKey, UpdateKey, RevokeKey, ListLogs, GetOverview };
+export const ApiKeyService = { GetMeta, ListKeys, CreateKey, RevealKey, UpdateKey, RevokeKey, DeleteKey, ListLogs, GetOverview };

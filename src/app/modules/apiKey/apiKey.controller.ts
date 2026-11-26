@@ -54,9 +54,14 @@ const RevokeKey = catchAsync(async (req, res) => {
   sendResponse(res, { success: true, statusCode: httpStatus.OK, message: 'API key revoked', data });
 });
 
+const DeleteKey = catchAsync(async (req, res) => {
+  const data = await ApiKeyService.DeleteKey(parseId(String(req.params.id)));
+  sendResponse(res, { success: true, statusCode: httpStatus.OK, message: 'API key deleted', data });
+});
+
 const ListLogs = catchAsync(async (req, res) => {
   const { items, meta } = await ApiKeyService.ListLogs(logsQuerySchema.parse(req.query));
   sendResponse(res, { success: true, statusCode: httpStatus.OK, message: 'API logs retrieved', data: items, meta });
 });
 
-export const ApiKeyController = { GetMeta, ListKeys, CreateKey, RevealKey, UpdateKey, RevokeKey, ListLogs };
+export const ApiKeyController = { GetMeta, ListKeys, CreateKey, RevealKey, UpdateKey, RevokeKey, DeleteKey, ListLogs };
