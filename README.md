@@ -204,7 +204,7 @@ seed/
 External systems can manage categories and products with admin-issued API keys. Keys are created in the admin panel under **Settings → Developer API** (ADMIN only) and are completely separate from website JWT auth.
 
 - Base path: `/api/v1` (send `X-API-Key: <key>`); management routes for the Settings UI: `/api/api-keys` (ADMIN JWT).
-- Only a SHA-256 hash of each key is stored; the full key is shown once. Keys support permissions (`categories:*`, `products:*`), expiry, IP/CIDR allow-list, per-key revocation.
+- Keys are authenticated by SHA-256 hash; an AES-256-GCM encrypted copy lets admins copy an active key again. Keys support permissions (`categories:*`, `products:*`), expiry, IP/CIDR allow-list, per-key revocation and permanent deletion (`DELETE /api/api-keys/:id`; request logs are kept, detached from the key).
 - Every request is logged to `ApiRequestLog` (no bodies/queries/keys). Rate limit per key, 256 KB body limit, optional `Idempotency-Key` on POST.
 - Docs live in the admin Settings page (source: `cyberspace-web/.../settings/developer/apiDocs.ts`).
 - Code: `modules/apiKey` (management), `modules/externalApi` (middleware, routes, validation).

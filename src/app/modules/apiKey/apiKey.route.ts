@@ -18,5 +18,6 @@ router.post('/', ApiKeyController.CreateKey);
 router.get('/:id/secret', ApiKeyController.RevealKey);
 router.patch('/:id',ApiKeyController.UpdateKey);
 router.post('/:id/revoke', ApiKeyController.RevokeKey);
+router.delete('/:id', ApiKeyController.DeleteKey);
 
 export const apiKeyRouter = router;
